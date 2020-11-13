@@ -1,0 +1,71 @@
+Index: app/src/main/java/com/example/login1/ViewPage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/login1/ViewPage.java	(date 1605231829308)
++++ app/src/main/java/com/example/login1/ViewPage.java	(date 1605231829308)
+@@ -6,7 +6,6 @@
+ import androidx.appcompat.app.AppCompatActivity;
+ 
+ import android.Manifest;
+-import android.app.Fragment;
+ import android.content.Context;
+ import android.content.DialogInterface;
+ import android.content.Intent;
+@@ -20,10 +19,8 @@
+ import android.os.Bundle;
+ import android.provider.MediaStore;
+ import android.util.Log;
+-import android.view.LayoutInflater;
+ import android.view.Menu;
+ import android.view.View;
+-import android.view.ViewGroup;
+ import android.widget.Button;
+ import android.widget.ImageView;
+ import android.widget.Toast;
+@@ -45,7 +42,7 @@
+ 
+ //import com.google.android.gms.drive.*;
+ //import com.google.android.gms.tasks.*;
+-public class ViewPage extends Fragment {
++public class ViewPage extends AppCompatActivity {
+ 
+     ImageView img;
+     Bitmap newImage;
+@@ -64,13 +61,8 @@
+     FirebaseAuth mAuth;
+ 
+     @Override
+-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+-        return inflater.inflate(R.layout.activity_main, container, false);
+-    }
+-
+-    @Override
+-    public void onActivityCreated(Bundle savedInstanceState) {
+-        super.onActivityCreated(savedInstanceState);
++    protected void onCreate(Bundle savedInstanceState) {
++        super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_view_page);
+         getSupportActionBar().hide();
+         account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+@@ -81,7 +73,8 @@
+         retrieveImage();
+     }
+ 
+-    private void retrieveImage() {
++    private void retrieveImage()
++    {
+         FirebaseStorage storage = FirebaseStorage.getInstance();
+         StorageReference storageRef = storage.getReferenceFromUrl("gs://login1-1604103237674.appspot.com/");
+         StorageReference pathReference = storageRef.child("images/" + account.getEmail());
+@@ -244,7 +237,8 @@
+ 
+     }
+ 
+-    public void logout(View view) {
++    public void logout(View view)
++    {
+         Intent intent = new Intent(this, MainActivity.class);
+         startActivity(intent);
+     }

@@ -1,0 +1,16 @@
+Index: app/src/main/java/com/example/login1/ViewPage.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/login1/ViewPage.java	(date 1604267763074)
++++ app/src/main/java/com/example/login1/ViewPage.java	(date 1604267763074)
+@@ -20,6 +20,8 @@
+ 
+ import java.io.File;
+ 
++import com.google.android.gms.drive.*;
++import com.google.android.gms.tasks.*;
+ public class ViewPage extends AppCompatActivity {
+ 
+     ImageView img;
