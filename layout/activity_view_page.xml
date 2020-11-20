@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#252525"
+    tools:context=".ViewPage">
+
+    <TextView
+        android:id="@+id/yourImage"
+        android:layout_width="252dp"
+        android:layout_height="81dp"
+        android:layout_marginTop="56dp"
+        android:text="Your Images:"
+        android:textAlignment="center"
+        android:textColor="#00BCD4"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="590dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yourImage">
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addImage"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="97dp"
+        android:layout_height="92dp"
+        android:layout_marginEnd="47dp"
+        android:layout_marginBottom="48dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:backgroundTint="#2196F3"
+        app:cornerRadius="50dp"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconPadding="0dp"
+        app:iconSize="75dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/photoSelect"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginBottom="1dp"
+        android:tag="photo"
+        android:text="Pick a Photo"
+        android:visibility="invisible"
+        app:backgroundTint="#676767"
+        app:layout_constraintBottom_toTopOf="@+id/cameraSelect"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/cameraSelect"
+        android:layout_width="250dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="68dp"
+        android:padding="2dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:tag="camera"
+        android:text="Use Camera"
+        android:visibility="invisible"
+        app:backgroundTint="#676767"
+        app:layout_constraintBottom_toTopOf="@+id/cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginBottom="64dp"
+        android:tag="cancel"
+        android:text="Cancel"
+        android:visibility="invisible"
+        app:backgroundTint="#676767"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="22dp"
+        android:text="Log Out"
+        app:backgroundTint="#606060"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
