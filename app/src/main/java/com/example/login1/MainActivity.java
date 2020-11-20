@@ -1,10 +1,14 @@
 package com.example.login1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.errorLoginText)).setText("Logging into " + name + "'s account...");
 
             //Going into activity page.
-            Intent nextPage = new Intent(this, ViewPage.class);
+            Intent nextPage = new Intent(this, ProfileAndImage.class);
             nextPage.putExtra("account", googleAccount);
             startActivity(nextPage);
         }

@@ -12,7 +12,7 @@
         android:layout_width="252dp"
         android:layout_height="81dp"
         android:layout_marginTop="56dp"
-        android:text="Your Image:"
+        android:text="Your Images:"
         android:textAlignment="center"
         android:textColor="#00BCD4"
         android:textSize="36sp"
@@ -21,18 +21,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="317dp"
-        android:layout_height="313dp"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="47dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="590dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yourImage"
-        app:srcCompat="@color/white"
-        tools:srcCompat="@color/white" />
+        app:layout_constraintTop_toBottomOf="@+id/yourImage">
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addImage"
@@ -45,7 +48,6 @@
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
-        android:onClick="onAddImageClick"
         app:backgroundTint="#2196F3"
         app:cornerRadius="50dp"
         app:icon="@android:drawable/ic_input_add"
@@ -58,27 +60,21 @@
         android:id="@+id/photoSelect"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="1dp"
-        android:onClick="onChoice"
+        android:layout_marginStart="68dp"
+        android:layout_marginBottom="1dp"
         android:tag="photo"
         android:text="Pick a Photo"
         android:visibility="invisible"
         app:backgroundTint="#676767"
-        app:layout_constraintBottom_toTopOf="@+id/cancel"
-        app:layout_constraintEnd_toStartOf="@+id/addImage"
+        app:layout_constraintBottom_toTopOf="@+id/cameraSelect"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cameraSelect"
         tools:visibility="visible" />
 
     <Button
         android:id="@+id/cameraSelect"
         android:layout_width="250dp"
         android:layout_height="48dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="144dp"
-        android:onClick="onChoice"
+        android:layout_marginStart="68dp"
         android:padding="2dp"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
@@ -86,27 +82,22 @@
         android:text="Use Camera"
         android:visibility="invisible"
         app:backgroundTint="#676767"
-        app:layout_constraintBottom_toTopOf="@+id/photoSelect"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
         tools:visibility="visible" />
 
     <Button
         android:id="@+id/cancel"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginBottom="62dp"
-        android:onClick="onChoice"
+        android:layout_marginStart="68dp"
+        android:layout_marginBottom="64dp"
         android:tag="cancel"
         android:text="Cancel"
         android:visibility="invisible"
         app:backgroundTint="#676767"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addImage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/photoSelect"
         tools:visibility="visible" />
 
     <Button
