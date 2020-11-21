@@ -1,11 +1,8 @@
 package com.example.login1;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,10 +20,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -53,11 +48,6 @@ public class ViewPage extends Fragment implements View.OnClickListener {
     final int PICK_IMAGE = 1;
     final int PICK_CAMERA = 0;
 
-    private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    private static final int MY_STORAGE_PERMISSION_CODE = 101;
-
-    String tag;
-
     Task<Uri> downloadUrl;
     GoogleSignInAccount account;
 
@@ -65,8 +55,6 @@ public class ViewPage extends Fragment implements View.OnClickListener {
     FirebaseAuth mAuth;
 
     MaterialButton addImageButton;
-    Button logOut;
-    Button photo, camera, cancel;
     Uri imageURI;
 
     LinearLayout layout;
@@ -81,16 +69,8 @@ public class ViewPage extends Fragment implements View.OnClickListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         addImageButton = getView().findViewById(R.id.addImage);
-        logOut = getView().findViewById(R.id.logout);
-        photo = getView().findViewById(R.id.photoSelect);
-        camera = getView().findViewById(R.id.cameraSelect);
-        cancel = getView().findViewById(R.id.cancel);
 
         addImageButton.setOnClickListener(this);
-        logOut.setOnClickListener(this);
-        photo.setOnClickListener(this);
-        camera.setOnClickListener(this);
-        cancel.setOnClickListener(this);
         account = (GoogleSignInAccount) getActivity().getIntent().getExtras().get("account");
         layout = getView().findViewById(R.id.layout);
         Log.d("acc", account.getDisplayName());
@@ -226,7 +206,7 @@ public class ViewPage extends Fragment implements View.OnClickListener {
                     .setCustomMetadata("caption", captionText)
                     .build();
             Log.d("path", images.get(i).getPath());
-            Task<StorageMetadata> storageMetadataTask = images.get(i).updateMetadata(caption)
+            images.get(i).updateMetadata(caption)
                     .addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
                         @Override
                         public void onSuccess(StorageMetadata storageMetadata) {
@@ -241,64 +221,6 @@ public class ViewPage extends Fragment implements View.OnClickListener {
                             Log.d("error", "error uploading caption");
                         }
                     });
-        }
-    }
-
-    public void onAddImageClick() {
-        getView().findViewById(R.id.cameraSelect).setVisibility(View.VISIBLE);
-        getView().findViewById(R.id.photoSelect).setVisibility(View.VISIBLE);
-        getView().findViewById(R.id.cancel).setVisibility(View.VISIBLE);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void onChoice(String tag) {
-        Log.d("tag", tag);
-        switch (tag) {
-            case "camera":
-
-                if (getActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                } else {
-                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, 0);
-
-                }
-                break;
-
-            case "photo":
-                if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_STORAGE_PERMISSION_CODE);
-                } else {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, 1);//one can be replaced with any action code
-                }
-                break;
-            case "cancel":
-                getView().findViewById(R.id.cameraSelect).setVisibility(View.INVISIBLE);
-                getView().findViewById(R.id.photoSelect).setVisibility(View.INVISIBLE);
-                getView().findViewById(R.id.cancel).setVisibility(View.INVISIBLE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MY_CAMERA_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && tag.equals("camera")) {
-                Toast.makeText(getContext(), "Camera Permission Granted", Toast.LENGTH_LONG).show();
-                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePicture, 0);
-            } else {
-                Toast.makeText(getContext(), "Camera Permission Denied", Toast.LENGTH_LONG).show();
-            }
-        } else if (requestCode == MY_STORAGE_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && tag.equals("photo")) {
-                Toast.makeText(getContext(), "Storage Permission Granted", Toast.LENGTH_LONG).show();
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 1);//one can be replaced with any action code
-            } else {
-                Toast.makeText(getContext(), "Storage Permission Denied", Toast.LENGTH_LONG).show();
-            }
         }
     }
 
@@ -352,34 +274,9 @@ public class ViewPage extends Fragment implements View.OnClickListener {
         return Uri.parse(path);
     }
 
-
-    public void logout() {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.addImage:
-                onAddImageClick();
-                break;
-            case R.id.logout:
-                logout();
-                break;
-            case R.id.photoSelect:
-                onChoice("photo");
-                break;
-            case R.id.cameraSelect:
-                onChoice("camera");
-                break;
-            case R.id.cancel:
-                onChoice("cancel");
-                break;
-        }
+        Intent startActivity = new Intent(getActivity(), CreateProblem.class);
+        startActivity(startActivity);
     }
-
-
 }
