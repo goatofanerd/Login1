@@ -2,13 +2,16 @@ package com.example.login1;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -17,6 +20,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -35,6 +40,8 @@ public class CreateProblem extends AppCompatActivity {
 
     final int PICK_IMAGE = 1;
     final int PICK_CAMERA = 0;
+
+    LinearLayout imagesLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,10 @@ public class CreateProblem extends AppCompatActivity {
                 }
             }
         });
+
+        problemEnter = findViewById(R.id.problem);
+        captionEnter = findViewById(R.id.caption);
+        imagesLayout = findViewById(R.id.imagesLayout);
     }
 
     public void onImageClick(View view)
@@ -69,6 +80,20 @@ public class CreateProblem extends AppCompatActivity {
         findViewById(R.id.cancel).setVisibility(View.VISIBLE);
     }
 
+    public void addImageToLayout(Uri image)
+    {
+        ImageView imageView = new ImageView(this);
+        imageView.setId(imagesLayout.getChildCount());
+        imageView.setPadding(20, 20, 20, 20);
+        imageView.setImageURI(image);
+
+        imageView.setMinimumHeight(imagesLayout.getHeight());
+        imageView.setMinimumWidth(1000);
+        imagesLayout.addView(imageView);
+
+        Toast.makeText(this, "Image Successfully Added", Toast.LENGTH_LONG).show();
+
+    }
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onChoice(View view) {
         Log.d("tag", view.getTag().toString());
@@ -128,11 +153,13 @@ public class CreateProblem extends AppCompatActivity {
             Uri imageURI = data.getData();
 
             problem.addImage(imageURI);
+            addImageToLayout(imageURI);
         } else if (requestCode == PICK_CAMERA && resultCode == Activity.RESULT_OK && null != data) {
             Bitmap photoBitmap = (Bitmap) data.getExtras().get("data");
             Uri imageURI = getImageUri(this, photoBitmap);
 
             problem.addImage(imageURI);
+            addImageToLayout(imageURI);
         } else {
             Log.d("cancel", "Cancelled");
         }
@@ -140,6 +167,35 @@ public class CreateProblem extends AppCompatActivity {
         findViewById(R.id.cameraSelect).setVisibility(View.INVISIBLE);
         findViewById(R.id.photoSelect).setVisibility(View.INVISIBLE);
         findViewById(R.id.cancel).setVisibility(View.INVISIBLE);
+    }
+
+    public void onSubmit(View view)
+    {
+        problem.setProblem(problemEnter.getText().toString());
+        problem.setCaption(captionEnter.getText().toString());
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        uploadProblem();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("You have attached " + problem.getImages().size() + " images, submit the problem?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+    }
+
+    private void uploadProblem() {
+        Log.d("upload", "Problem: " + problem.getProblem() + "    Caption: " + problem.getCaption());
     }
 
 

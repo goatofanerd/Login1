@@ -12,6 +12,7 @@
         android:layout_width="246dp"
         android:layout_height="88dp"
         android:layout_marginBottom="64dp"
+        android:onClick="onSubmit"
         android:text="Submit"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
@@ -70,18 +71,18 @@
             android:layout_width="match_parent"
             android:layout_height="30dp" />
 
-        <ScrollView
+        <HorizontalScrollView
             android:id="@+id/imageScroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="250dp">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:id="@+id/imagesLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal" />
-        </ScrollView>
+        </HorizontalScrollView>
 
         <Space
             android:layout_width="match_parent"

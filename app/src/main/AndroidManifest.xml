@@ -19,9 +19,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Login1">
-        <activity android:name=".CreateProblem"></activity>
-        <activity android:name=".ProfileAndImage" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".CreateProblem"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ProfileAndImage"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
