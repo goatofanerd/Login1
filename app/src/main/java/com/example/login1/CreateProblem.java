@@ -22,10 +22,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CreateProblem extends AppCompatActivity {
 
@@ -43,6 +55,13 @@ public class CreateProblem extends AppCompatActivity {
 
     LinearLayout imagesLayout;
 
+    private StorageReference mStorageRef;
+    FirebaseAuth mAuth;
+
+    GoogleSignInAccount account;
+
+    ProgressBar bar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +69,10 @@ public class CreateProblem extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Create New Problem");
         problem = new Problem("Unnamed Problem", "");
-
+        account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        bar = (ProgressBar) findViewById(R.id.progressBar);
         KeyboardUtils.addKeyboardToggleListener(this, new KeyboardUtils.SoftKeyboardToggleListener()
         {
             @Override
@@ -84,11 +106,11 @@ public class CreateProblem extends AppCompatActivity {
     {
         ImageView imageView = new ImageView(this);
         imageView.setId(imagesLayout.getChildCount());
-        imageView.setPadding(20, 20, 20, 20);
+        imageView.setPadding(0, 20, 0, 20);
         imageView.setImageURI(image);
 
         imageView.setMinimumHeight(imagesLayout.getHeight());
-        imageView.setMinimumWidth(1000);
+        imageView.setMinimumWidth(600);
         imagesLayout.addView(imageView);
 
         Toast.makeText(this, "Image Successfully Added", Toast.LENGTH_LONG).show();
@@ -196,8 +218,57 @@ public class CreateProblem extends AppCompatActivity {
 
     private void uploadProblem() {
         Log.d("upload", "Problem: " + problem.getProblem() + "    Caption: " + problem.getCaption());
+        uploadImages();
     }
 
+    private void uploadImages() {
+        bar.setVisibility(View.VISIBLE);
+        findViewById(R.id.submitButton).setVisibility(View.INVISIBLE);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = dateFormat.format(new Date());
+        StorageReference storage = mStorageRef.child("images/" + account.getEmail() + "/ProblemAt " + currentTime + "/");
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        StorageMetadata metaData = new StorageMetadata.Builder()
+                .setCustomMetadata("problem", problem.getProblem())
+                .setCustomMetadata("caption", problem.getCaption())
+                .build();
+        if (user != null && problem.getImages().size() != 0) {
+            for(int i = 0; i < problem.getImages().size(); i++) {
+                storage.child("" + i).putFile(problem.getImages().get(i))
+                        .addOnSuccessListener(taskSnapshot -> {
+                            Log.d("success", "success uploading images");
+                            bar.setProgress(bar.getProgress() + 100/problem.getImages().size());
+                        })
+                        .addOnFailureListener(exception -> {
+                            Log.d("url", "fail uploading");
+                            // Handle unsuccessful uploads
+                            // ...
+                        });
+
+            }
+            storage.child("metadata").putFile(problem.getImages().get(problem.getImages().size() - 1), metaData)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        Log.d("success", "success uploading problem and caption");
+                        bar.setProgress(100);
+                    })
+                    .addOnFailureListener(exception -> {
+                        Log.d("url", "fail uploading problem and caption");
+                        // Handle unsuccessful uploads
+                        // ...
+                    });
+        }
+
+
+        try {
+            Thread.sleep(300);
+        }
+        catch(Exception e)
+        {
+            Log.d("error", "error sleeping");
+        }
+
+    }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

@@ -277,6 +277,7 @@ public class ViewPage extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent startActivity = new Intent(getActivity(), CreateProblem.class);
+        startActivity.putExtra("account", account);
         startActivity(startActivity);
     }
 }

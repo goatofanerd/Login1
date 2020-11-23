@@ -23,7 +23,9 @@ import com.google.android.gms.drive.*;
 import com.google.android.gms.tasks.*;
 import com.google.firebase.FirebaseApp;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.Serializable;
+
+public class MainActivity extends AppCompatActivity{
 
     public int RC_SIGN_IN = 2401;
     @Override
